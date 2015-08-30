@@ -11,11 +11,16 @@ import org.domate.model.PhoneNumber;
 import org.domate.model.RhesusFactor;
 import org.junit.Test;
 
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+
 public class DonatorMongoDAOIT {
 
 	@Test
-	public void shouldInsertADonator() {
-		DonatorMongoDAO dao = new DonatorMongoDAO();
+	public void saveAndRetrieveADonator() {
+		MongoClient mongoClient = new MongoClient("localhost", 27017);
+		DB db = mongoClient.getDB("domate");
+		DonatorMongoDAO dao = new DonatorMongoDAO(db);
 		Donator donator = createDonator();
 		dao.insert(donator);
 		Donator result = dao.findById(donator.getUsername());

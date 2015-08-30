@@ -1,26 +1,29 @@
 package org.domate.persistence;
 
-import java.util.UUID;
-
 import org.domate.model.Donator;
-import org.domate.persistence.DonatorDAO;
 import org.mongojack.JacksonDBCollection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
 
+@Repository
 public class DonatorMongoDAO implements DonatorDAO {
 
-	MongoClient mongoClient = new MongoClient("localhost", 27017);
-	DB db = mongoClient.getDB("domate");
+	private DB db;
+
+	@Autowired     
+	public DonatorMongoDAO(DB db) {
+		this.db = db;
+	}
 
 	@Override
 	public void insert(Donator donator) {
 		try {
 			JacksonDBCollection<Donator, String> collection = JacksonDBCollection
 					.wrap(getCollection(), Donator.class, String.class);
-			collection.insert(donator);
+			collection.insert(donator); 
 		} catch (Throwable t) {
 			throw new RuntimeException("ERROR INSERTING DONATOR: "
 					+ donator.getUsername(), t);
